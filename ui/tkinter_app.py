@@ -525,7 +525,7 @@ class SmartGardenApp:
         if self.active_tab == "light":
             self.current_light = self.config["light"]
             self.min_val = 12
-            self.max_val = 18
+            self.max_val = 24
             self.unit = "ч/день"
             display_value = self.current_light
         elif self.active_tab == "watering":

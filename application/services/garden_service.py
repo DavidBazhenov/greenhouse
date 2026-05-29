@@ -20,6 +20,13 @@ class GardenService:
         self.runtime_config = runtime_config
         self.state_store = state_store
 
+    def _calculate_light_schedule(self) -> tuple[int, int]:
+        start_hour = 8 if self.runtime_config is None else self.runtime_config.light_start_hour
+        light_hours = int(self.state.config["light"])
+        if light_hours >= 24:
+            return 0, 24
+        return start_hour, min(24, start_hour + light_hours)
+
     def save_state(self) -> None:
         if self.state_store is not None:
             self.state_store.save(self.state)
@@ -29,8 +36,7 @@ class GardenService:
 
     def restore_runtime_state(self) -> None:
         if self.state.plants:
-            start_hour = 8 if self.runtime_config is None else self.runtime_config.light_start_hour
-            end_hour = min(23, start_hour + self.state.config["light"])
+            start_hour, end_hour = self._calculate_light_schedule()
             self.hardware.set_light_schedule(start_hour, end_hour)
             self.sync_hardware()
             if self.state.settings.get("auto_mode", True):
@@ -54,8 +60,7 @@ class GardenService:
         )
         self.state.plants.append(plant)
 
-        start_hour = 8 if self.runtime_config is None else self.runtime_config.light_start_hour
-        end_hour = min(23, start_hour + self.state.config["light"])
+        start_hour, end_hour = self._calculate_light_schedule()
         self.hardware.set_light_schedule(start_hour, end_hour)
         self.sync_hardware()
 

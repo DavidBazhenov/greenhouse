@@ -17,7 +17,7 @@ class RuntimeConfig:
     mock_gpio: bool = False
     fullscreen: bool = False
     light_start_hour: int = 8
-    default_light_end_hour: int = 20
+    default_light_end_hour: int = 24
     window_width: int = 320
     window_height: int = 240
     minimum_width: int = 320
@@ -39,7 +39,7 @@ class RuntimeConfig:
             mock_gpio=os.getenv("GREENBOX_MOCK_GPIO", "0").lower() in {"1", "true", "yes", "on"},
             fullscreen=os.getenv("GREENBOX_FULLSCREEN", "0").lower() in {"1", "true", "yes", "on"},
             light_start_hour=int(os.getenv("GREENBOX_LIGHT_START_HOUR", "8")),
-            default_light_end_hour=int(os.getenv("GREENBOX_LIGHT_END_HOUR", "20")),
+            default_light_end_hour=int(os.getenv("GREENBOX_LIGHT_END_HOUR", "24")),
             window_width=int(os.getenv("GREENBOX_WINDOW_WIDTH", "320")),
             window_height=int(os.getenv("GREENBOX_WINDOW_HEIGHT", "240")),
             minimum_width=int(os.getenv("GREENBOX_MIN_WIDTH", "320")),
