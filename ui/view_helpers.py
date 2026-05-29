@@ -19,13 +19,37 @@ def configure_modal(window: tk.Toplevel, root: tk.Misc, width: int, height: int,
 
 
 def enable_touch_scroll(canvas: tk.Canvas, scrollable: tk.Widget) -> None:
+    interactive_widget_names = {
+        "Button",
+        "Checkbutton",
+        "Entry",
+        "Text",
+        "Spinbox",
+        "Scale",
+        "Radiobutton",
+        "TCombobox",
+    }
+
+    def should_scroll(event: tk.Event) -> bool:
+        widget = getattr(event, "widget", None)
+        if widget is None:
+            return True
+        widget_class = widget.winfo_class()
+        if widget_class in interactive_widget_names:
+            return False
+        return True
+
     def on_press(event: tk.Event) -> None:
+        if not should_scroll(event):
+            return
         canvas.scan_mark(
             event.x_root - canvas.winfo_rootx(),
             event.y_root - canvas.winfo_rooty(),
         )
 
     def on_drag(event: tk.Event) -> None:
+        if not should_scroll(event):
+            return
         canvas.scan_dragto(
             event.x_root - canvas.winfo_rootx(),
             event.y_root - canvas.winfo_rooty(),
@@ -41,13 +65,11 @@ def enable_touch_scroll(canvas: tk.Canvas, scrollable: tk.Widget) -> None:
             delta = -1 if getattr(event, "delta", 0) > 0 else 1
             canvas.yview_scroll(delta, "units")
 
-    def bind_recursive(widget: tk.Widget) -> None:
-        widget.bind("<ButtonPress-1>", on_press, add="+")
-        widget.bind("<B1-Motion>", on_drag, add="+")
-        widget.bind("<MouseWheel>", on_mousewheel, add="+")
-        widget.bind("<Button-4>", on_mousewheel, add="+")
-        widget.bind("<Button-5>", on_mousewheel, add="+")
-        for child in widget.winfo_children():
-            bind_recursive(child)
+    canvas.bind("<ButtonPress-1>", on_press, add="+")
+    canvas.bind("<B1-Motion>", on_drag, add="+")
+    canvas.bind("<MouseWheel>", on_mousewheel, add="+")
+    canvas.bind("<Button-4>", on_mousewheel, add="+")
+    canvas.bind("<Button-5>", on_mousewheel, add="+")
 
-    bind_recursive(scrollable)
+    scrollable.bind("<ButtonPress-1>", on_press, add="+")
+    scrollable.bind("<B1-Motion>", on_drag, add="+")
