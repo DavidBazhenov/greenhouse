@@ -15,6 +15,7 @@ class PinMapping:
 @dataclass(frozen=True)
 class RuntimeConfig:
     mock_gpio: bool = False
+    fullscreen: bool = False
     light_start_hour: int = 8
     default_light_end_hour: int = 20
     window_width: int = 320
@@ -36,6 +37,7 @@ class RuntimeConfig:
     def from_env(cls) -> RuntimeConfig:
         return cls(
             mock_gpio=os.getenv("GREENBOX_MOCK_GPIO", "0").lower() in {"1", "true", "yes", "on"},
+            fullscreen=os.getenv("GREENBOX_FULLSCREEN", "0").lower() in {"1", "true", "yes", "on"},
             light_start_hour=int(os.getenv("GREENBOX_LIGHT_START_HOUR", "8")),
             default_light_end_hour=int(os.getenv("GREENBOX_LIGHT_END_HOUR", "20")),
             window_width=int(os.getenv("GREENBOX_WINDOW_WIDTH", "320")),
