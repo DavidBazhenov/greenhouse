@@ -34,13 +34,18 @@ class GardenService:
     def sync_hardware(self) -> None:
         self.hardware.update_garden(self.state.plants)
 
+    def apply_runtime_state(self) -> None:
+        start_hour, end_hour = self._calculate_light_schedule()
+        self.hardware.set_light_schedule(start_hour, end_hour)
+        self.sync_hardware()
+        if self.state.settings.get("auto_mode", True):
+            self.hardware.start_auto_mode()
+        else:
+            self.hardware.stop_auto_mode()
+
     def restore_runtime_state(self) -> None:
         if self.state.plants:
-            start_hour, end_hour = self._calculate_light_schedule()
-            self.hardware.set_light_schedule(start_hour, end_hour)
-            self.sync_hardware()
-            if self.state.settings.get("auto_mode", True):
-                self.hardware.start_auto_mode()
+            self.apply_runtime_state()
 
     def add_selected_plant(self) -> PlantCreationResult:
         preset = PLANT_PRESETS[self.state.config["selectedPlant"]]
@@ -60,12 +65,7 @@ class GardenService:
         )
         self.state.plants.append(plant)
 
-        start_hour, end_hour = self._calculate_light_schedule()
-        self.hardware.set_light_schedule(start_hour, end_hour)
-        self.sync_hardware()
-
-        if self.state.settings.get("auto_mode", True):
-            self.hardware.start_auto_mode()
+        self.apply_runtime_state()
 
         self.save_state()
 

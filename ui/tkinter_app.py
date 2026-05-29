@@ -571,6 +571,8 @@ class SmartGardenApp:
                     text=f"{self.current_light} {self.unit}")
                 self.config["light"] = self.current_light
                 self._persist_state()
+                if self.service is not None:
+                    self.service.apply_runtime_state()
         elif self.active_tab == "watering":
             if hasattr(self, 'current_watering') and self.current_watering > self.min_val:
                 self.current_watering -= 1
@@ -594,6 +596,8 @@ class SmartGardenApp:
                     text=f"{self.current_light} {self.unit}")
                 self.config["light"] = self.current_light
                 self._persist_state()
+                if self.service is not None:
+                    self.service.apply_runtime_state()
         elif self.active_tab == "watering":
             if hasattr(self, 'current_watering') and self.current_watering < self.max_val:
                 self.current_watering += 1
@@ -620,6 +624,7 @@ class SmartGardenApp:
         if self.service is None:
             raise RuntimeError("GardenService is not configured")
 
+        self.service.apply_runtime_state()
         result = self.service.add_selected_plant()
         messagebox.showinfo("Успех", result.message)
         self.show_my_garden_screen()
@@ -835,6 +840,8 @@ class SmartGardenApp:
             self.app_settings["notifications"] = notifications_var.get()
             self.app_settings["auto_mode"] = auto_var.get()
             self._persist_state()
+            if self.service is not None:
+                self.service.apply_runtime_state()
             messagebox.showinfo("Успех", "Настройки сохранены!")
             settings_window.destroy()
 
