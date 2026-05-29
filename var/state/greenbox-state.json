@@ -1,0 +1,42 @@
+{
+  "config": {
+    "selectedPlant": "Черри",
+    "light": 15,
+    "watering": 8,
+    "fertilizer": "K+P+микро",
+    "isRunning": false,
+    "startDate": null,
+    "wifi_connected": true
+  },
+  "settings": {
+    "notifications": true,
+    "auto_mode": true,
+    "temperature_unit": "Celsius"
+  },
+  "plants": [
+    {
+      "name": "Черри",
+      "icon": "🍒",
+      "start_date": "2026-05-29T23:08:48.999509",
+      "last_water_date": "2026-05-29T23:08:48.999509",
+      "light": 15,
+      "watering": 8,
+      "fertilizer": "K+P+микро",
+      "days": "60-80",
+      "temp": "18-26",
+      "unique_id": "plant-ae9ce546aa8c4d008746efa6bc6e449e"
+    },
+    {
+      "name": "Черри",
+      "icon": "🍒",
+      "start_date": "2026-05-29T23:26:08.749481",
+      "last_water_date": "2026-05-29T23:26:08.749481",
+      "light": 15,
+      "watering": 8,
+      "fertilizer": "K+P+микро",
+      "days": "60-80",
+      "temp": "18-26",
+      "unique_id": "plant-73837a89da904377a6a03eb97dd606f4"
+    }
+  ]
+}
