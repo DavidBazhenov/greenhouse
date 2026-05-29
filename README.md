@@ -81,6 +81,22 @@ Watch and restart a module on changes:
 python scripts/watch_and_run.py frontend/main.py
 ```
 
+## Raspberry Pi Autostart
+
+For kiosk-style startup in fullscreen, use the launcher script:
+
+```bash
+./scripts/start_greenhouse.sh
+```
+
+In a desktop autostart entry, point `Exec` to:
+
+```bash
+/home/mikle/greenhouse/scripts/start_greenhouse.sh
+```
+
+The launcher enables fullscreen automatically and keeps the manual launch path unchanged.
+
 ## Notes For Raspberry Pi
 
 - `gpiozero` is isolated behind the hardware adapter.
