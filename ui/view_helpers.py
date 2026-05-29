@@ -65,11 +65,20 @@ def enable_touch_scroll(canvas: tk.Canvas, scrollable: tk.Widget) -> None:
             delta = -1 if getattr(event, "delta", 0) > 0 else 1
             canvas.yview_scroll(delta, "units")
 
+    def bind_recursive(widget: tk.Widget) -> None:
+        if widget.winfo_class() not in interactive_widget_names:
+            widget.bind("<ButtonPress-1>", on_press, add="+")
+            widget.bind("<B1-Motion>", on_drag, add="+")
+            widget.bind("<MouseWheel>", on_mousewheel, add="+")
+            widget.bind("<Button-4>", on_mousewheel, add="+")
+            widget.bind("<Button-5>", on_mousewheel, add="+")
+
+        for child in widget.winfo_children():
+            bind_recursive(child)
+
     canvas.bind("<ButtonPress-1>", on_press, add="+")
     canvas.bind("<B1-Motion>", on_drag, add="+")
     canvas.bind("<MouseWheel>", on_mousewheel, add="+")
     canvas.bind("<Button-4>", on_mousewheel, add="+")
     canvas.bind("<Button-5>", on_mousewheel, add="+")
-
-    scrollable.bind("<ButtonPress-1>", on_press, add="+")
-    scrollable.bind("<B1-Motion>", on_drag, add="+")
+    bind_recursive(scrollable)
